@@ -6,5 +6,8 @@ edition = "2021"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-# plotly = { version = "0.8.4", features = ["kaleido"] }
+phf = {version = "0.11.2", features = ["macros"]}
 polars = "0.33.2"
+
+# maplit = "1.0.2"
+# plotly = { version = "0.8.4", features = ["kaleido"] }

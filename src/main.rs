@@ -1,7 +1,14 @@
 use std::convert::From;
+use phf::phf_map;
 
 const CHIP_COL_MAP: [char; 10] = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J'];
 const CHIP_ROW_MAP: [char; 10] = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '0'];
+const CUT_MAP: phf::Map<char, [(i32, i32); 2]> = phf_map! {
+    'A' => [(0, 0), (10, 10)],
+};
+
+
+// TODO: using config file for CHIP_COL_MAP and CHIP_ROW_MAP
 
 #[derive(Debug, PartialEq)]
 struct Point {
@@ -97,6 +104,27 @@ impl From<&Chip> for Point {
     }
 }
 
+#[derive(Debug)]
+struct Sub {
+    id: String,
+    chips: Vec<Chip>,
+}
+
+// sub iterate over chips with the name sub.id + chip.id
+impl IntoIterator for Sub {
+    type Item = String;
+    type IntoIter = std::vec::IntoIter<Self::Item>;
+
+    fn into_iter(self) -> Self::IntoIter {
+        let id = self.id;
+        let mut v = Vec::new();
+        for c in self.chips {
+            v.push(format!("{}{}", id, c.id));
+        }
+        v.into_iter()
+    }
+}
+
 fn main() {
     let p = Point { x: 1, y: 2 };
     let c: Chip = p.into();
@@ -116,4 +144,16 @@ fn main() {
     println!("{:?}", c1);
     println!("{:?}", c2);
     println!("{:?}", c1 < c2);
+
+    let s1 = Sub {
+        id: "s1".to_string(),
+        chips: vec![c1, c2],
+    };
+    println!("{:?}", s1);
+
+    for c in s1 {
+        println!("{:?}", c);
+    }
+
+    println!("{:?}", CUT_MAP);
 }
